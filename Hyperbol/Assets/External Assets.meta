@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<< HEAD:Hyperbol/Assets/External Assets.meta
 guid: cca6cb207167ec34f838223c5758c2a5
+=======
+guid: 7ed62c7e50b132241a20cf26d0acaf0a
+>>>>>>> Arena:Hyperbol/Assets/Materials.meta
 folderAsset: yes
 DefaultImporter:
   externalObjects: {}
