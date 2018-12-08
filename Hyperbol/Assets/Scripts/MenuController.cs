@@ -1,14 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MenuController : MonoBehaviour
 {
 
     public void StartGame()
     {
-        bool teamRedHasPlayers = false;
-        bool teamBlueHasPlayers = false;
+        int amountOfRedPlayers = 0;
+        int amountOfBluePlayers = 0;
 
         for (int i = 0; i < PlayerTracker.trackedPlayers.Length; i++)
         {
@@ -16,16 +17,17 @@ public class MenuController : MonoBehaviour
 
             if(chosenTeam != Teams.NotJoined)
             {
-                if(chosenTeam == Teams.Red)
-                    teamRedHasPlayers = true;
+                if (chosenTeam == Teams.Red)
+                    amountOfRedPlayers++;
                 else if (chosenTeam == Teams.Blue)
-                    teamBlueHasPlayers = true;
+                    amountOfBluePlayers++;
             }
         }
 
-        if(teamRedHasPlayers && teamBlueHasPlayers)
+        if (amountOfRedPlayers > 0 && amountOfRedPlayers < 3 && amountOfBluePlayers > 0 && amountOfBluePlayers < 3)
         {
             Debug.Log("Start game boi");
+            SceneManager.LoadScene(1);
         }
         else
         {

@@ -4,11 +4,19 @@ using XInputDotNetPure;
 
 public class Vibration : MonoBehaviour
 {
-    public static Vibration instance;
+    private static Vibration instance;
 
     void Awake()
     {
         instance = this;
+    }
+
+    private void OnDisable()
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            GamePad.SetVibration((PlayerIndex)(i), 0, 0);
+        }
     }
 
     public static void VibrateForSeconds(float seconds, float amount, int playerIndex)

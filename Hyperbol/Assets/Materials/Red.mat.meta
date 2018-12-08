@@ -1,14 +1,8 @@
 fileFormatVersion: 2
-<<<<<<< HEAD:Hyperbol/Assets/Textures.meta
-guid: 678daf24a6ce85b43bbb77d8e57faf4f
-folderAsset: yes
-DefaultImporter:
-=======
-guid: 9e53994af2b18934083c1e577350182a
+guid: 384a9cd153ea9654a8ea98a93a8755e8
 NativeFormatImporter:
->>>>>>> Arena:Hyperbol/Assets/Materials/Red.mat.meta
   externalObjects: {}
-  mainObjectFileID: 2100000
+  mainObjectFileID: 0
   userData: 
   assetBundleName: 
   assetBundleVariant: 
