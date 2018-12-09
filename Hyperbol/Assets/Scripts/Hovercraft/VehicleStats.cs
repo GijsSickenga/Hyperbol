@@ -36,5 +36,18 @@ public class VehicleStats : MonoBehaviour
             return _vehiclePhysics;
         }
     }
+
+    private LaunchBall _launchBall;
+    public LaunchBall LaunchBall
+    {
+        get
+        {
+            if (_launchBall == null)
+            {
+                _launchBall = GetComponent<LaunchBall>();
+            }
+            return _launchBall;
+        }
+    }
     #endregion
 }

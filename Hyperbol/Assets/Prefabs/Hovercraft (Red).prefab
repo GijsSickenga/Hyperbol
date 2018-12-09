@@ -28,6 +28,22 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &1805552455630232
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4944216131729492}
+  - component: {fileID: 135253815052149124}
+  m_Layer: 0
+  m_Name: Sphere
+  m_TagString: Player
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1929169215676112
 GameObject:
   m_ObjectHideFlags: 0
@@ -41,6 +57,7 @@ GameObject:
   - component: {fileID: 114844959084122822}
   - component: {fileID: 114964755293049074}
   - component: {fileID: 136799486430131556}
+  - component: {fileID: 114967317085281970}
   m_Layer: 9
   m_Name: Hovercraft (Red)
   m_TagString: Player
@@ -89,6 +106,7 @@ Transform:
   m_Children:
   - {fileID: 4006421810893684}
   - {fileID: 4909427437768854}
+  - {fileID: 4944216131729492}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -105,6 +123,19 @@ Transform:
   m_Father: {fileID: 4878742884309216}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+--- !u!4 &4944216131729492
+Transform:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1805552455630232}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4878742884309216}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &23000181609368946
 MeshRenderer:
   m_ObjectHideFlags: 1
@@ -313,6 +344,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f86b9b45f8e66b04a9bee82e3ba4e496, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114967317085281970
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1929169215676112}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cba353ac8b370834696217d2e8031f23, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!135 &135253815052149124
+SphereCollider:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1805552455630232}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 1.5
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!136 &136799486430131556
 CapsuleCollider:
   m_ObjectHideFlags: 1

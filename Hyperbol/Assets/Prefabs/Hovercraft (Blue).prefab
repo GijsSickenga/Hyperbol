@@ -57,8 +57,25 @@ GameObject:
   - component: {fileID: 114230100393077132}
   - component: {fileID: 114892099345276710}
   - component: {fileID: 136820301787425046}
+  - component: {fileID: 114994104211531254}
   m_Layer: 9
   m_Name: Hovercraft (Blue)
+  m_TagString: Player
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &1920171970533388
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4395343890863636}
+  - component: {fileID: 135988446108682600}
+  m_Layer: 0
+  m_Name: Sphere
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -76,6 +93,7 @@ Transform:
   m_Children:
   - {fileID: 4274481773123314}
   - {fileID: 4478739704215146}
+  - {fileID: 4395343890863636}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -92,6 +110,19 @@ Transform:
   m_Father: {fileID: 4220483869255840}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+--- !u!4 &4395343890863636
+Transform:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1920171970533388}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4220483869255840}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4478739704215146
 Transform:
   m_ObjectHideFlags: 1
@@ -313,6 +344,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f86b9b45f8e66b04a9bee82e3ba4e496, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114994104211531254
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1915991923408948}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cba353ac8b370834696217d2e8031f23, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!135 &135988446108682600
+SphereCollider:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1920171970533388}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 1.5
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!136 &136820301787425046
 CapsuleCollider:
   m_ObjectHideFlags: 1

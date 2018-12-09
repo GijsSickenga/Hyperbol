@@ -91,7 +91,7 @@ public class VehicleControls : MonoBehaviour
         }
         if (_launchBallPressed)
         {
-            // VehicleStats.LaunchBall.Invoke();
+            VehicleStats.LaunchBall.ShootBall();
         }
     }
 
