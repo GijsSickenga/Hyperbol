@@ -832,8 +832,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b67469ec04927a84a9dd2a6f58ed71af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerPrefab: {fileID: 1421264272595916, guid: 01d6ebf368011314db6bc7e9fbd2223c,
-    type: 2}
+  bluePlayer: {fileID: 1915991923408948, guid: e5a016d8bfa20d341957f7b901067650, type: 2}
+  redPlayer: {fileID: 1929169215676112, guid: b4edabbb12511604e89dd2d3d13feff4, type: 2}
   redSpawnSingle: {fileID: 9590712}
   blueSpawnSingle: {fileID: 1338875259}
   redSpawnDuo:
@@ -1387,7 +1387,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7b2ba74b8181f5408e1d157cf0d1f80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  matchDurationSeconds: 10
+  matchDurationSeconds: 300
   timeText: {fileID: 706462981}
   redScoreText: {fileID: 1217971495}
   blueScoreText: {fileID: 1459467438}

@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 33714974390942794}
   - component: {fileID: 23792859928169630}
   m_Layer: 0
-  m_Name: ship
+  m_Name: ship model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
