@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class MenuController : MonoBehaviour
 {
+    public GameObject loadingImage;
 
     public void StartGame()
     {
@@ -26,7 +27,8 @@ public class MenuController : MonoBehaviour
 
         if (amountOfRedPlayers > 0 && amountOfRedPlayers < 3 && amountOfBluePlayers > 0 && amountOfBluePlayers < 3)
         {
-            Debug.Log("Start game boi");
+            Debug.Log("Start game");
+            loadingImage.SetActive(true);
             SceneManager.LoadScene(1);
         }
         else
