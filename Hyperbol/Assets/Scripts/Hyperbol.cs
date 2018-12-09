@@ -99,8 +99,7 @@ public class Hyperbol : MonoBehaviour
 
         currentFlySpeed = baseMoveSpeed;
         currentMaxSpeed = currentFlySpeed;
-        currentDirection = new Vector3(1, 0, 1);
-        currentDirection.Normalize();
+        currentDirection = Vector3.right;
     }
 
     public void GoRandomDirection()
