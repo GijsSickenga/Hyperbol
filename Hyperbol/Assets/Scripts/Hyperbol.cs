@@ -1,19 +1,65 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using NaughtyAttributes;
 using UnityEngine;
 
 public class Hyperbol : MonoBehaviour
 {
+    private const string MOVEMENT_TITLE = "Movement";
+    private const string VISUALS_TITLE = "Visuals";
+
+    private const string EMISSIVE_COLOR_NAME = "_EmissionColor";
+
+    private MeshRenderer _meshRenderer;
+    private MeshRenderer MeshRenderer
+    {
+        get
+        {
+            if (_meshRenderer == null)
+            {
+                _meshRenderer = GetComponent<MeshRenderer>();
+            }
+            return _meshRenderer;
+        }
+    }
+
+    // Math.
+    [BoxGroup(MOVEMENT_TITLE)]
     public Transform startPoint;
+    [BoxGroup(MOVEMENT_TITLE)]
     public float baseMoveSpeed = 10f;
+    [BoxGroup(MOVEMENT_TITLE)]
     public AnimationCurve dragCurve;
+    [BoxGroup(MOVEMENT_TITLE)]
     public float timeToResetSpeed = 5f;
+    [BoxGroup(MOVEMENT_TITLE)]
     public float timeToResetSpeedWhenHeld = 5f;
 
+    [BoxGroup(MOVEMENT_TITLE)]
     public float spinDistance = 1f;
+    [BoxGroup(MOVEMENT_TITLE)]
     public float spinSpeedMultiplier = 5f;
 
+    [BoxGroup(MOVEMENT_TITLE)]
     public int ShootSpeedIncreasePercentage = 50;
+
+    // Visuals.
+    [BoxGroup(VISUALS_TITLE)] [ColorUsage(false, true)]
+    public Color defaultColor;
+    [BoxGroup(VISUALS_TITLE)] [GradientHDR]
+    public Gradient colorOverVelocity;
+    [BoxGroup(VISUALS_TITLE)]
+    public float maxColorVelocity = 100;
+    [BoxGroup(VISUALS_TITLE)]
+    public Light light;
+
+    private float VelocityPortionOfMax
+    {
+        get
+        {
+            return currentFlySpeed / maxColorVelocity;
+        }
+    }
 
     [HideInInspector]
     public Transform currentSpinTarget;
@@ -32,15 +78,22 @@ public class Hyperbol : MonoBehaviour
         }
     }
 
-	void Start ()
+	void Start()
     {
         rb = GetComponent<Rigidbody>();
 
         ResetBal();
 	}
 
+    private void OnDisable()
+    {
+        MeshRenderer.sharedMaterial.SetColor(EMISSIVE_COLOR_NAME, defaultColor);
+        light.color = defaultColor;
+    }
+
     public void ResetBal()
     {
+        currentSpinTarget = null;
         transform.position = startPoint.position;
 
         rb.velocity = Vector3.zero;
@@ -95,7 +148,7 @@ public class Hyperbol : MonoBehaviour
         resetSpeedTimer = timeToResetSpeedWhenHeld;
     }
 	
-	void Update ()
+	void Update()
     {
         if (currentSpinTarget == null)
         {
@@ -134,7 +187,7 @@ public class Hyperbol : MonoBehaviour
 
             currentSpinAngle += rotationSpeed * Time.deltaTime;
 
-            if(currentSpinAngle > Mathf.PI * 2)
+            if (currentSpinAngle > Mathf.PI * 2)
             {
                 currentSpinAngle -= Mathf.PI * 2;
             }
@@ -148,11 +201,16 @@ public class Hyperbol : MonoBehaviour
 
             transform.position = currentSpinTarget.position + spinOffset;
         }
+
+        // Change color.
+        Color gradientColor = colorOverVelocity.Evaluate(VelocityPortionOfMax);
+        MeshRenderer.sharedMaterial.SetColor(EMISSIVE_COLOR_NAME, gradientColor);
+        light.color = gradientColor;
 	}
 
     void OnTriggerEnter(Collider other)
     {
-        if(other.CompareTag(Tags.PLAYER))
+        if (other.CompareTag(Tags.PLAYER))
         {
             ReceiveBall(other.transform);
 
