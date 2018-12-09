@@ -37,7 +37,7 @@ public class SpawnManager : MonoBehaviour
         {
             SpawnPlayer(redPlayerIDs[0], Teams.Red, redSpawnSingle);
         }
-        else
+        else if (redPlayerIDs.Count == 2)
         {
             SpawnPlayer(redPlayerIDs[0], Teams.Red, redSpawnDuo[0]);
 
@@ -48,7 +48,7 @@ public class SpawnManager : MonoBehaviour
         {
             SpawnPlayer(bluePlayerIDs[0], Teams.Blue, blueSpawnSingle);
         }
-        else
+        else if (bluePlayerIDs.Count == 2)
         {
             SpawnPlayer(bluePlayerIDs[0], Teams.Blue, blueSpawnDuo[0]);
 

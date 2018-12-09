@@ -25,7 +25,11 @@ public class MenuController : MonoBehaviour
             }
         }
 
+#if UNITY_EDITOR
+        if (true)
+#else
         if (amountOfRedPlayers > 0 && amountOfRedPlayers < 3 && amountOfBluePlayers > 0 && amountOfBluePlayers < 3)
+#endif
         {
             Debug.Log("Start game");
             loadingImage.SetActive(true);
@@ -36,5 +40,4 @@ public class MenuController : MonoBehaviour
             Debug.Log("Not enough players in teams");
         }
     }
-	
 }
