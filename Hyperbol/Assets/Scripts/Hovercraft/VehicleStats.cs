@@ -8,9 +8,6 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody), typeof(VehiclePhysics))]
 public class VehicleStats : MonoBehaviour
 {
-    private int _playerId;
-    // private Teams _team;
-
     #region Miscellaneous Scripts
     private Rigidbody _vehicleRigidbody;
     public Rigidbody VehicleRigidbody
