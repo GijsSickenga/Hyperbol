@@ -14,4 +14,6 @@ public static class Tags
 
     // Custom tags (in order).
     public const string HYPERBOL = "Hyperbol";
+    public const string WALL = "Wall";
+    public const string GOAL = "Goal";
 }

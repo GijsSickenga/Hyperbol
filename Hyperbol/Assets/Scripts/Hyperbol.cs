@@ -64,11 +64,14 @@ public class Hyperbol : MonoBehaviour
     [HideInInspector]
     public Transform currentSpinTarget;
 
-    private Rigidbody rb;
+    public float colliderRadius = 0.5f;
+
     private float resetSpeedTimer;
     private float currentMaxSpeed;
     private float currentFlySpeed;
     private float currentSpinAngle;
+
+    private Vector3 currentDirection;
 
     private float CircleDistance
     {
@@ -80,8 +83,6 @@ public class Hyperbol : MonoBehaviour
 
 	void Start()
     {
-        rb = GetComponent<Rigidbody>();
-
         ResetBal();
 	}
 
@@ -96,9 +97,10 @@ public class Hyperbol : MonoBehaviour
         currentSpinTarget = null;
         transform.position = startPoint.position;
 
-        rb.velocity = Vector3.zero;
         currentFlySpeed = baseMoveSpeed;
         currentMaxSpeed = currentFlySpeed;
+        currentDirection = new Vector3(1, 0, 1);
+        currentDirection.Normalize();
     }
 
     public void GoRandomDirection()
@@ -107,7 +109,7 @@ public class Hyperbol : MonoBehaviour
         dir.y = 0;
         dir.Normalize();
 
-        rb.velocity = dir * baseMoveSpeed;
+        currentDirection = dir;
         currentMaxSpeed = baseMoveSpeed;
         currentFlySpeed = baseMoveSpeed;
     }
@@ -116,7 +118,7 @@ public class Hyperbol : MonoBehaviour
     {
         float factor = (100 + percentage) / 100f;
 
-        currentMaxSpeed = rb.velocity.magnitude * factor;
+        currentMaxSpeed = currentFlySpeed * factor;
         currentFlySpeed = currentMaxSpeed;
 
         resetSpeedTimer = timeToResetSpeed;
@@ -131,13 +133,13 @@ public class Hyperbol : MonoBehaviour
 
         currentSpinTarget = null;
 
-        rb.velocity = direction * currentFlySpeed;
+        currentDirection = direction;
         SpeedUpBall(ShootSpeedIncreasePercentage);
     }
 
     public void ReceiveBall(Transform target)
     {
-        rb.velocity = Vector3.zero;
+        currentDirection = Vector3.zero;
 
         Vector3 direction = transform.position - target.position;
         direction.y = 0;
@@ -145,7 +147,9 @@ public class Hyperbol : MonoBehaviour
 
         currentSpinAngle = Mathf.Atan2(direction.z, direction.x);
         currentSpinTarget = target;
+
         resetSpeedTimer = timeToResetSpeedWhenHeld;
+        currentMaxSpeed = currentFlySpeed;
     }
 	
 	void Update()
@@ -159,12 +163,68 @@ public class Hyperbol : MonoBehaviour
                 float factor = dragCurve.Evaluate((timeToResetSpeed - resetSpeedTimer) / timeToResetSpeed);
                 float newSpeed = baseMoveSpeed + (currentMaxSpeed - baseMoveSpeed) * factor;
 
-                rb.velocity = rb.velocity.normalized * newSpeed;
                 currentFlySpeed = newSpeed;
             }
             else
             {
-                currentFlySpeed = rb.velocity.magnitude;
+                currentFlySpeed = baseMoveSpeed;
+                currentMaxSpeed = baseMoveSpeed;
+            }
+
+            // Handle default movement
+            currentDirection.y = 0;
+            currentDirection.Normalize();
+
+            Vector3 moveVec = currentDirection * currentFlySpeed * Time.deltaTime;
+            Vector3 ballEdgeOffset = currentDirection * colliderRadius + transform.position;
+
+            Ray moveRay = new Ray(ballEdgeOffset, moveVec.normalized);
+            RaycastHit hit;
+
+            float distanceToTravel = currentFlySpeed * Time.deltaTime;
+            Vector3 newPosition = ballEdgeOffset;
+
+            bool overrideMovement = false;
+
+            while (Physics.Raycast(moveRay, out hit, distanceToTravel) && !overrideMovement)
+            {
+                if (hit.transform.CompareTag(Tags.WALL))
+                {
+                    // Wall, reflect
+                    Vector3 reflected = Vector3.Reflect(currentDirection, hit.normal);
+                    reflected.y = 0;
+                    reflected.Normalize();
+                    moveRay = new Ray(hit.point, reflected);
+
+                    distanceToTravel -= hit.distance;
+                    reflected *= distanceToTravel;
+
+                    Debug.DrawLine(newPosition, hit.point,Color.red, 5f);
+                    currentDirection = reflected.normalized;
+                    newPosition = hit.point;
+                } 
+                else if (hit.transform.CompareTag(Tags.GOAL))
+                {
+                    hit.transform.GetComponent<Goal>().Score();
+
+                    ResetBal();
+                    overrideMovement = true;
+                }
+                else if (hit.transform.CompareTag(Tags.PLAYER))
+                {
+                    ReceiveBall(hit.transform);
+
+                    hit.transform.root.GetComponent<LaunchBall>().PickUpBall(this);
+
+                    overrideMovement = true;
+                }
+            }
+
+            if (!overrideMovement)
+            {
+                // Nothing hit, can move freely
+                transform.position = newPosition + currentDirection * distanceToTravel - currentDirection * colliderRadius;
+                Debug.DrawLine(newPosition, newPosition + currentDirection * distanceToTravel, Color.red, 5f);
             }
         }
         else
@@ -177,6 +237,10 @@ public class Hyperbol : MonoBehaviour
                 float newSpeed = baseMoveSpeed + (currentMaxSpeed - baseMoveSpeed) * factor;
 
                 currentFlySpeed = newSpeed;
+            }
+            else
+            {
+                currentMaxSpeed = baseMoveSpeed;
             }
 
             float spinSpeed = currentFlySpeed / spinSpeedMultiplier;
@@ -210,11 +274,6 @@ public class Hyperbol : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag(Tags.PLAYER))
-        {
-            ReceiveBall(other.transform);
-
-            other.transform.root.GetComponent<LaunchBall>().PickUpBall(this);
-        }
+        
     }
 }

@@ -7,21 +7,15 @@ public class Goal : MonoBehaviour
     public Teams team;
     public GameManager gameManager;
 
-    void OnCollisionEnter(Collision other)
+    public void Score()
     {
-        if (other.gameObject.CompareTag(Tags.HYPERBOL))
+        if (team == Teams.Red)
         {
-            if (team == Teams.Red)
-            {
-                gameManager.GoalForBlue();
-            }
-            else if (team == Teams.Blue)
-            {
-                gameManager.GoalForRed();
-            }
-
-            other.gameObject.GetComponent<Hyperbol>().ResetBal();
+            gameManager.GoalForBlue();
+        }
+        else if (team == Teams.Blue)
+        {
+            gameManager.GoalForRed();
         }
     }
-
 }
