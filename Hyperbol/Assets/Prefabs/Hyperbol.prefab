@@ -218,7 +218,7 @@ MonoBehaviour:
   timeToResetSpeedWhenHeld: 5
   spinDistance: 4
   spinSpeedMultiplier: 3.5
-  ShootSpeedIncreasePercentage: 150
+  ShootSpeedIncreasePercentage: 50
   currentSpinTarget: {fileID: 0}
 --- !u!135 &135196454105307100
 SphereCollider:
