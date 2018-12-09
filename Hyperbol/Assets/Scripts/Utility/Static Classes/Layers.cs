@@ -13,6 +13,8 @@ public static class Layers
         UI = 5,
 
         // Custom layers.
-        PostProcessing = 8
+        PostProcessing = 8,
+        Ships = 9,
+        Hyperbol = 10
     }
 }

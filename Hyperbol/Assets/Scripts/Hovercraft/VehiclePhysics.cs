@@ -118,7 +118,20 @@ public class VehiclePhysics : MonoBehaviour
     public float DrivingVelocity
     {
         get { return _drivingVelocity; }
-        set { _drivingVelocity = Mathf.Clamp(value, 0, MaxDrivingVelocity); }
+        set { _drivingVelocity = Mathf.Clamp(value, -MaxDrivingVelocity, MaxDrivingVelocity); }
+    }
+
+    [BoxGroup(READ_ONLY_BOX_TITLE)]
+    [SerializeField] [ReadOnly]
+    [Tooltip("The current braking velocity of the vehicle.")]
+    private float _brakingVelocity = 0f;
+    /// <summary>
+    /// The current braking velocity of the vehicle.
+    /// </summary>
+    public float BrakingVelocity
+    {
+        get { return _brakingVelocity; }
+        set { _brakingVelocity = Mathf.Clamp(value, -MaxDrivingVelocity, MaxDrivingVelocity); }
     }
 
     [BoxGroup(READ_ONLY_BOX_TITLE)]
@@ -185,13 +198,26 @@ public class VehiclePhysics : MonoBehaviour
         }
     }
 
+    [BoxGroup(DRIVING_BOX_TITLE)]
+    [SerializeField] [MinValue(0)]
+    [Tooltip("The maximum reverse velocity of the vehicle in unity units per second.")]
+    private float _maxReverseVelocity = 40f;
+    /// <summary>
+    /// The maximum reverse velocity of the vehicle.
+    /// </summary>
+    public float MaxReverseVelocity
+    {
+        get { return _maxReverseVelocity; }
+        private set { _maxReverseVelocity = ExFuncs.ClampPositive(value); }
+    }
+
     /// <summary>
     /// Returns current driving velocity portion of max driving velocity.
     /// 1 = maxed out velocity.
     /// </summary>
     public float DrivingVelocityPortionOfMax
     {
-        get { return DrivingVelocity / MaxDrivingVelocity; }
+        get { return VehicleStats.VehicleRigidbody.velocity.magnitude / MaxDrivingVelocity; }
     }
 
     [BoxGroup(DRIVING_BOX_TITLE)]
@@ -205,6 +231,19 @@ public class VehiclePhysics : MonoBehaviour
     {
         get { return _drivingAcceleration; }
         private set { _drivingAcceleration = ExFuncs.ClampPositive(value); }
+    }
+
+    [BoxGroup(DRIVING_BOX_TITLE)]
+    [SerializeField] [MinValue(0)]
+    [Tooltip("The braking acceleration of the vehicle in unity units per second.")]
+    private float _brakingAcceleration = 15f;
+    /// <summary>
+    /// The braking acceleration of the vehicle.
+    /// </summary>
+    public float BrakingAcceleration
+    {
+        get { return _brakingAcceleration; }
+        private set { _brakingAcceleration = ExFuncs.ClampPositive(value); }
     }
 
     [BoxGroup(DRIVING_BOX_TITLE)]
@@ -230,19 +269,6 @@ public class VehiclePhysics : MonoBehaviour
     private void UpdateDrivingSlowdownTime()
     {
         _drivingSlowdownTime = ExFuncs.RoundToDecimal(MaxDrivingVelocity / DrivingFriction, 2);
-    }
-
-    [BoxGroup(DRIVING_BOX_TITLE)]
-    [SerializeField] [MinValue(0)]
-    [Tooltip("The time in seconds it takes the vehicle to slow down from max velocity when braking.")]
-    private float _brakeSlowdownTime = 3f;
-    /// <summary>
-    /// The time in seconds it takes the vehicle to slow down from max velocity when braking.
-    /// </summary>
-    public float BrakeSlowdownTime
-    {
-        get { return _brakeSlowdownTime; }
-        private set { _brakeSlowdownTime = ExFuncs.ClampPositive(value); }
     }
     #endregion
 
@@ -459,7 +485,7 @@ public class VehiclePhysics : MonoBehaviour
         if (!CanReceiveInput)
             return;
 
-        DrivingVelocity = ApplyFriction(DrivingVelocity, MaxDrivingVelocity, BrakeSlowdownTime, Time.deltaTime);
+        BrakingVelocity += BrakingAcceleration * Time.deltaTime;
     }
     #endregion
 
@@ -574,9 +600,30 @@ public class VehiclePhysics : MonoBehaviour
     /// <summary>
     /// Applies the current driving velocity to the rigidbody.
     /// </summary>
-    private void ApplySailVelocity()
+    private void ApplyDrivingVelocity()
     {
-        VehicleStats.VehicleRigidbody.velocity = transform.forward * DrivingVelocity;
+        VehicleStats.VehicleRigidbody.velocity += transform.forward * DrivingVelocity;
+        DrivingVelocity = 0;
+        VehicleStats.VehicleRigidbody.velocity = Vector3.ClampMagnitude(VehicleStats.VehicleRigidbody.velocity, MaxDrivingVelocity);
+    }
+
+    /// <summary>
+    /// Applies the current braking velocity to the rigidbody.
+    /// </summary>
+    private void ApplyBrakingVelocity()
+    {
+		if (VehicleStats.VehicleRigidbody.velocity.magnitude > MaxReverseVelocity)
+        {
+            VehicleStats.VehicleRigidbody.velocity -= transform.forward * BrakingVelocity;
+            // VehicleStats.VehicleRigidbody.velocity -= VehicleStats.VehicleRigidbody.velocity.normalized * BrakingVelocity;
+            VehicleStats.VehicleRigidbody.velocity = Vector3.ClampMagnitude(VehicleStats.VehicleRigidbody.velocity, MaxDrivingVelocity);
+        }
+		else
+        {
+            VehicleStats.VehicleRigidbody.velocity -= transform.forward * BrakingVelocity;
+            VehicleStats.VehicleRigidbody.velocity = Vector3.ClampMagnitude(VehicleStats.VehicleRigidbody.velocity, MaxReverseVelocity);
+		}
+        BrakingVelocity = 0;
     }
 
     /// <summary>
@@ -640,17 +687,18 @@ public class VehiclePhysics : MonoBehaviour
     private void FixedUpdate()
     {
         // Apply friction.
-        if (!IsBeingSpedUp)
-        {
-            DrivingVelocity = ApplyFriction(DrivingVelocity, DrivingFriction, Time.fixedDeltaTime);
-        }
+        // if (!IsBeingSpedUp)
+        // {
+        //     DrivingVelocity = ApplyFriction(DrivingVelocity, DrivingFriction, Time.fixedDeltaTime);
+        // }
         if (!IsBeingSteered)
         {
             RotationalVelocity = ApplyFriction(RotationalVelocity, TurningFriction, Time.fixedDeltaTime);
         }
 
         // Apply calculated velocities to vehicle rigidbody.
-        ApplySailVelocity();
+        ApplyDrivingVelocity();
+        ApplyBrakingVelocity();
         ApplyRotationalVelocity();
         ApplySway();
     }

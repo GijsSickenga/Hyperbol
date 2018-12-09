@@ -75,7 +75,7 @@ public class VehicleControls : MonoBehaviour
         {
             VehicleStats.VehiclePhysics.SpeedUp();
         }
-        if (_slowDownHeld && !_speedUpHeld)
+        if (_slowDownHeld)
         {
             VehicleStats.VehiclePhysics.SlowDown();
         }
