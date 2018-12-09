@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
 {
-    public GameObject playerPrefab;
+    public GameObject bluePlayer;
+    public GameObject redPlayer;
 
     public Transform redSpawnSingle;
     public Transform blueSpawnSingle;
@@ -58,7 +59,18 @@ public class SpawnManager : MonoBehaviour
 
     private void SpawnPlayer(int playerIndex, Teams team, Transform spawnPoint)
     {
-        GameObject player = Instantiate(playerPrefab, spawnPoint.position, spawnPoint.rotation);
+        GameObject player = null;
+        switch (team)
+        {
+            case Teams.Blue:
+                player = Instantiate(bluePlayer, spawnPoint.position, spawnPoint.rotation);
+                break;
+
+            case Teams.Red:
+                player = Instantiate(redPlayer, spawnPoint.position, spawnPoint.rotation);
+                break;
+        }
+        
         player.GetComponent<VehicleControls>().Initialize(playerIndex, team);
 
         Vibration.VibrateForSeconds(0.5f, 0.5f, playerIndex);

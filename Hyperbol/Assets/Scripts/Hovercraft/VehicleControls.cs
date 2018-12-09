@@ -13,6 +13,10 @@ public class VehicleControls : MonoBehaviour
 {
     private int _playerId = -1;
     private Teams _team;
+    public Teams Team
+    {
+        get { return _team; }
+    }
 
     public const float TRIGGER_TRESHOLD = 0.5f;
     public const float STICK_DEADZONE = 0.1333333f;
