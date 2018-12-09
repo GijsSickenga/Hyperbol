@@ -55,6 +55,7 @@ public class Hyperbol : MonoBehaviour
     public float maxColorVelocity = 100;
     [BoxGroup(VISUALS_TITLE)]
     public Light light;
+
     [BoxGroup(VISUALS_TITLE)]
     public GameObject wallBounce;
     [BoxGroup(VISUALS_TITLE)]
@@ -62,11 +63,15 @@ public class Hyperbol : MonoBehaviour
     [BoxGroup(VISUALS_TITLE)]
     public GameObject shootBluePS;
 
+    [BoxGroup(VISUALS_TITLE)]
+    public GameObject trailObject;
+    private TrailRenderer trail;
+
     private float VelocityPortionOfMax
     {
         get
         {
-            return currentFlySpeed / maxColorVelocity;
+            return (currentFlySpeed - baseMoveSpeed) / maxColorVelocity;
         }
     }
 
@@ -103,12 +108,23 @@ public class Hyperbol : MonoBehaviour
 
     public void ResetBal()
     {
+        if (trail != null)
+        {
+            trail.transform.parent = null;
+            trail.autodestruct = true;
+        }
+
         currentSpinTarget = null;
         transform.position = startPoint.position;
 
         currentFlySpeed = baseMoveSpeed;
         currentMaxSpeed = currentFlySpeed;
         currentDirection = Vector3.right;
+
+        GameObject newTrailInstance = Instantiate(trailObject);
+        trail = newTrailInstance.GetComponent<TrailRenderer>();
+        trail.transform.parent = transform;
+        trail.transform.localPosition = Vector3.zero;
     }
 
     public void GoRandomDirection()
