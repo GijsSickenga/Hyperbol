@@ -43,6 +43,9 @@ public class Hyperbol : MonoBehaviour
     [BoxGroup(MOVEMENT_TITLE)]
     public int ShootSpeedIncreasePercentage = 50;
 
+    [BoxGroup(MOVEMENT_TITLE)]
+    public float wallOffset = 0.1f;
+
     // Visuals.
     [BoxGroup(VISUALS_TITLE)] [ColorUsage(false, true)]
     public Color defaultColor;
@@ -52,6 +55,12 @@ public class Hyperbol : MonoBehaviour
     public float maxColorVelocity = 100;
     [BoxGroup(VISUALS_TITLE)]
     public Light light;
+    [BoxGroup(VISUALS_TITLE)]
+    public GameObject wallBounce;
+    [BoxGroup(VISUALS_TITLE)]
+    public GameObject shootRedPS;
+    [BoxGroup(VISUALS_TITLE)]
+    public GameObject shootBluePS;
 
     private float VelocityPortionOfMax
     {
@@ -123,7 +132,7 @@ public class Hyperbol : MonoBehaviour
         resetSpeedTimer = timeToResetSpeed;
     }
 
-    public void ShootBall()
+    public void ShootBall(Teams team)
     {
         Vector3 direction = transform.position - currentSpinTarget.position;
 
@@ -134,6 +143,15 @@ public class Hyperbol : MonoBehaviour
 
         currentDirection = direction;
         SpeedUpBall(ShootSpeedIncreasePercentage);
+
+        if (team == Teams.Red)
+        {
+            GameObject ps = Instantiate(shootRedPS, transform.position, Quaternion.LookRotation(direction, Vector3.up));
+        }
+        else if (team == Teams.Blue)
+        {
+            GameObject ps = Instantiate(shootBluePS, transform.position, Quaternion.LookRotation(direction, Vector3.up));
+        }
     }
 
     public void ReceiveBall(Transform target)
@@ -201,6 +219,10 @@ public class Hyperbol : MonoBehaviour
                     Debug.DrawLine(newPosition, hit.point,Color.red, 5f);
                     currentDirection = reflected.normalized;
                     newPosition = hit.point;
+
+                    GameObject ps = Instantiate(wallBounce, hit.point, Quaternion.LookRotation(hit.normal, Vector3.up));
+                    var bullshit = ps.GetComponent<ParticleSystem>().main;
+                    bullshit.startColor = MeshRenderer.sharedMaterial.GetColor(EMISSIVE_COLOR_NAME);
                 } 
                 else if (hit.transform.CompareTag(Tags.GOAL))
                 {
@@ -225,6 +247,12 @@ public class Hyperbol : MonoBehaviour
                 transform.position = newPosition + currentDirection * distanceToTravel - currentDirection * colliderRadius;
                 Debug.DrawLine(newPosition, newPosition + currentDirection * distanceToTravel, Color.red, 5f);
             }
+
+            // Check outside map
+            if (Mathf.Abs(transform.position.x) > 70f)
+                ResetBal();
+            if (Mathf.Abs(transform.position.z) > 70f)
+                ResetBal();
         }
         else
         {
@@ -259,8 +287,53 @@ public class Hyperbol : MonoBehaviour
                 currentSpinAngle += Mathf.PI * 2;
             }
 
-            Vector3 spinOffset = new Vector3(Mathf.Cos(currentSpinAngle), 0, Mathf.Sin(currentSpinAngle));
-            spinOffset *= spinDistance;
+            float xPos = Mathf.Cos(currentSpinAngle) * spinDistance;
+
+            if(xPos < 0)
+            {
+                RaycastHit rayHit;
+                if (Physics.Raycast(currentSpinTarget.position, Vector3.left, out rayHit, spinDistance))
+                {
+                    float distWithRadius = rayHit.distance - colliderRadius - wallOffset;
+                    if (Mathf.Abs(xPos) > distWithRadius)
+                        xPos = -distWithRadius;
+                }
+            }
+            else
+            {
+                RaycastHit rayHit;
+                if (Physics.Raycast(currentSpinTarget.position, Vector3.right, out rayHit, spinDistance))
+                {
+                    float distWithRadius = rayHit.distance - colliderRadius - wallOffset;
+                    if (xPos > distWithRadius)
+                        xPos = distWithRadius;
+                }
+            }
+
+            float zPos = Mathf.Sin(currentSpinAngle) * spinDistance;
+
+            if (zPos < 0)
+            {
+                RaycastHit rayHit;
+                if (Physics.Raycast(currentSpinTarget.position, Vector3.back, out rayHit, spinDistance))
+                {
+                    float distWithRadius = rayHit.distance - colliderRadius - wallOffset;
+                    if (Mathf.Abs(zPos) > distWithRadius)
+                        zPos = -distWithRadius;
+                }
+            }
+            else
+            {
+                RaycastHit rayHit;
+                if (Physics.Raycast(currentSpinTarget.position, Vector3.forward, out rayHit, spinDistance))
+                {
+                    float distWithRadius = rayHit.distance - colliderRadius - wallOffset;
+                    if (zPos > distWithRadius)
+                        zPos = distWithRadius;
+                }
+            }
+
+            Vector3 spinOffset = new Vector3(xPos, 0, zPos);
 
             transform.position = currentSpinTarget.position + spinOffset;
         }
@@ -270,9 +343,4 @@ public class Hyperbol : MonoBehaviour
         MeshRenderer.sharedMaterial.SetColor(EMISSIVE_COLOR_NAME, gradientColor);
         light.color = gradientColor;
 	}
-
-    void OnTriggerEnter(Collider other)
-    {
-        
-    }
 }

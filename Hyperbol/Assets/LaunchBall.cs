@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class LaunchBall : MonoBehaviour
 {
-
     private Hyperbol currentBall;
 
     public void PickUpBall(Hyperbol ball)
@@ -16,7 +15,7 @@ public class LaunchBall : MonoBehaviour
     {
         if(currentBall != null)
         {
-            currentBall.ShootBall();
+            currentBall.ShootBall(GetComponent<VehicleControls>().Team);
             currentBall = null;
         }
     }

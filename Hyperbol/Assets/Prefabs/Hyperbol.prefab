@@ -331,8 +331,9 @@ MonoBehaviour:
   timeToResetSpeed: 7
   timeToResetSpeedWhenHeld: 5
   spinDistance: 4
-  spinSpeedMultiplier: 3.5
+  spinSpeedMultiplier: 5
   ShootSpeedIncreasePercentage: 25
+  wallOffset: 0.1
   defaultColor: {r: 1.2311443, g: 1.2311443, b: 1.2311443, a: 0}
   colorOverVelocity:
     serializedVersion: 2
@@ -365,5 +366,9 @@ MonoBehaviour:
     m_NumAlphaKeys: 2
   maxColorVelocity: 100
   light: {fileID: 108501761811546092}
+  wallBounce: {fileID: 1835773958283422, guid: 3dd05a8cd2f56b646aa5cd718ecf18be, type: 2}
+  shootRedPS: {fileID: 1469260690149024, guid: 1937df435a07fd148877d73eac6ad853, type: 2}
+  shootBluePS: {fileID: 1007921680522454, guid: ee60cc8f67bbc7b429fd1ae1cc5c4186,
+    type: 2}
   currentSpinTarget: {fileID: 0}
   colliderRadius: 0.5
