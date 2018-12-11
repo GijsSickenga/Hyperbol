@@ -164,6 +164,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startPoint: {fileID: 0}
   baseMoveSpeed: 50
+  moveSpeedCap: 150
   dragCurve:
     serializedVersion: 2
     m_Curve:
@@ -201,23 +202,23 @@ MonoBehaviour:
   timeToResetSpeedWhenHeld: 5
   spinDistance: 4
   spinSpeedMultiplier: 5
-  ShootSpeedIncreasePercentage: 25
+  ShootSpeedIncreasePercentage: 15
   wallOffset: 0.1
   defaultColor: {r: 1.2311443, g: 1.2311443, b: 1.2311443, a: 0}
   colorOverVelocity:
     serializedVersion: 2
-    key0: {r: 0, g: 0.40670246, b: 1.4980392, a: 1}
-    key1: {r: 0, g: 1.4980392, b: 1.4980392, a: 1}
-    key2: {r: 1.4980392, g: 1.4980392, b: 0, a: 0}
-    key3: {r: 1.4980392, g: 0, b: 0, a: 0}
-    key4: {r: 1, g: 0, b: 0, a: 0}
+    key0: {r: 0.3917388, g: 0, b: 1.7814789, a: 1}
+    key1: {r: 0, g: 0.40670246, b: 1.4980392, a: 1}
+    key2: {r: 0, g: 1.4980392, b: 1.4980392, a: 0}
+    key3: {r: 1.4980392, g: 1.4980392, b: 0, a: 0}
+    key4: {r: 1.4980392, g: 0, b: 0, a: 0}
     key5: {r: 1, g: 0, b: 0, a: 0}
     key6: {r: 1, g: 0, b: 0, a: 0}
     key7: {r: 0, g: 0, b: 0, a: 0}
     ctime0: 0
-    ctime1: 21627
-    ctime2: 43253
-    ctime3: 65535
+    ctime1: 16384
+    ctime2: 32768
+    ctime3: 49151
     ctime4: 65535
     ctime5: 65535
     ctime6: 65535
@@ -231,9 +232,8 @@ MonoBehaviour:
     atime6: 0
     atime7: 0
     m_Mode: 0
-    m_NumColorKeys: 4
+    m_NumColorKeys: 5
     m_NumAlphaKeys: 2
-  maxColorVelocity: 200
   light: {fileID: 108501761811546092}
   wallBounce: {fileID: 1835773958283422, guid: 3dd05a8cd2f56b646aa5cd718ecf18be, type: 2}
   shootRedPS: {fileID: 1469260690149024, guid: 1937df435a07fd148877d73eac6ad853, type: 2}

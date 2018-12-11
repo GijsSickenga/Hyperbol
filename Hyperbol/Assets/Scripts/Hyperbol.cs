@@ -29,6 +29,8 @@ public class Hyperbol : MonoBehaviour
     [BoxGroup(MOVEMENT_TITLE)]
     public float baseMoveSpeed = 10f;
     [BoxGroup(MOVEMENT_TITLE)]
+    public float moveSpeedCap = 150f;
+    [BoxGroup(MOVEMENT_TITLE)]
     public AnimationCurve dragCurve;
     [BoxGroup(MOVEMENT_TITLE)]
     public float timeToResetSpeed = 5f;
@@ -52,8 +54,6 @@ public class Hyperbol : MonoBehaviour
     [BoxGroup(VISUALS_TITLE)] [GradientHDR]
     public Gradient colorOverVelocity;
     [BoxGroup(VISUALS_TITLE)]
-    public float maxColorVelocity = 100;
-    [BoxGroup(VISUALS_TITLE)]
     public Light light;
 
     [BoxGroup(VISUALS_TITLE)]
@@ -71,7 +71,7 @@ public class Hyperbol : MonoBehaviour
     {
         get
         {
-            return (currentFlySpeed - baseMoveSpeed) / maxColorVelocity;
+            return (CurrentFlySpeed - baseMoveSpeed) / (moveSpeedCap - baseMoveSpeed);
         }
     }
 
@@ -82,7 +82,12 @@ public class Hyperbol : MonoBehaviour
 
     private float resetSpeedTimer;
     private float currentMaxSpeed;
-    private float currentFlySpeed;
+    private float _currentFlySpeed;
+    private float CurrentFlySpeed
+    {
+        get { return _currentFlySpeed; }
+        set { _currentFlySpeed = Mathf.Clamp(value, 0, moveSpeedCap); }
+    }
     private float currentSpinAngle;
 
     private Vector3 currentDirection;
@@ -117,8 +122,8 @@ public class Hyperbol : MonoBehaviour
         currentSpinTarget = null;
         transform.position = startPoint.position;
 
-        currentFlySpeed = baseMoveSpeed;
-        currentMaxSpeed = currentFlySpeed;
+        CurrentFlySpeed = baseMoveSpeed;
+        currentMaxSpeed = CurrentFlySpeed;
         currentDirection = Vector3.right;
 
         GameObject newTrailInstance = Instantiate(trailObject);
@@ -135,15 +140,15 @@ public class Hyperbol : MonoBehaviour
 
         currentDirection = dir;
         currentMaxSpeed = baseMoveSpeed;
-        currentFlySpeed = baseMoveSpeed;
+        CurrentFlySpeed = baseMoveSpeed;
     }
 
     public void SpeedUpBall(int percentage)
     {
         float factor = (100 + percentage) / 100f;
 
-        currentMaxSpeed = currentFlySpeed * factor;
-        currentFlySpeed = currentMaxSpeed;
+        currentMaxSpeed = CurrentFlySpeed * factor;
+        CurrentFlySpeed = currentMaxSpeed;
 
         resetSpeedTimer = timeToResetSpeed;
     }
@@ -182,7 +187,7 @@ public class Hyperbol : MonoBehaviour
         currentSpinTarget = target;
 
         resetSpeedTimer = timeToResetSpeedWhenHeld;
-        currentMaxSpeed = currentFlySpeed;
+        currentMaxSpeed = CurrentFlySpeed;
     }
 	
 	void Update()
@@ -196,11 +201,11 @@ public class Hyperbol : MonoBehaviour
                 float factor = dragCurve.Evaluate((timeToResetSpeed - resetSpeedTimer) / timeToResetSpeed);
                 float newSpeed = baseMoveSpeed + (currentMaxSpeed - baseMoveSpeed) * factor;
 
-                currentFlySpeed = newSpeed;
+                CurrentFlySpeed = newSpeed;
             }
             else
             {
-                currentFlySpeed = baseMoveSpeed;
+                CurrentFlySpeed = baseMoveSpeed;
                 currentMaxSpeed = baseMoveSpeed;
             }
 
@@ -208,13 +213,13 @@ public class Hyperbol : MonoBehaviour
             currentDirection.y = 0;
             currentDirection.Normalize();
 
-            Vector3 moveVec = currentDirection * currentFlySpeed * Time.deltaTime;
+            Vector3 moveVec = currentDirection * CurrentFlySpeed * Time.deltaTime;
             Vector3 ballEdgeOffset = currentDirection * colliderRadius + transform.position;
 
             Ray moveRay = new Ray(ballEdgeOffset, moveVec.normalized);
             RaycastHit hit;
 
-            float distanceToTravel = currentFlySpeed * Time.deltaTime;
+            float distanceToTravel = CurrentFlySpeed * Time.deltaTime;
             Vector3 newPosition = ballEdgeOffset;
 
             bool overrideMovement = false;
@@ -279,14 +284,14 @@ public class Hyperbol : MonoBehaviour
                 float factor = dragCurve.Evaluate((timeToResetSpeedWhenHeld - resetSpeedTimer) / timeToResetSpeedWhenHeld);
                 float newSpeed = baseMoveSpeed + (currentMaxSpeed - baseMoveSpeed) * factor;
 
-                currentFlySpeed = newSpeed;
+                CurrentFlySpeed = newSpeed;
             }
             else
             {
                 currentMaxSpeed = baseMoveSpeed;
             }
 
-            float spinSpeed = currentFlySpeed / spinSpeedMultiplier;
+            float spinSpeed = CurrentFlySpeed / spinSpeedMultiplier;
 
             float timeForRotation = CircleDistance / spinSpeed;
 
