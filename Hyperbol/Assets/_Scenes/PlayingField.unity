@@ -184,6 +184,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   team: 0
   gameManager: {fileID: 1356100110}
+  blueGoalPS: {fileID: 1972990356221578, guid: 9a5d74bcbf4949946a6858dab073f9dc, type: 2}
+  redGoalPS: {fileID: 1836933562332190, guid: 836711af3c2955b47a8adc46b7176ffd, type: 2}
 --- !u!64 &201904815
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -600,6 +602,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   team: 1
   gameManager: {fileID: 1356100110}
+  blueGoalPS: {fileID: 1972990356221578, guid: 9a5d74bcbf4949946a6858dab073f9dc, type: 2}
+  redGoalPS: {fileID: 1836933562332190, guid: 836711af3c2955b47a8adc46b7176ffd, type: 2}
 --- !u!64 &651709210
 MeshCollider:
   m_ObjectHideFlags: 0
