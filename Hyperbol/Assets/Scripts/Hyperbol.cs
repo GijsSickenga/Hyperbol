@@ -17,7 +17,7 @@ public class Hyperbol : MonoBehaviour
         {
             if (_meshRenderer == null)
             {
-                _meshRenderer = GetComponent<MeshRenderer>();
+                _meshRenderer = modelTransform.GetComponent<MeshRenderer>();
             }
             return _meshRenderer;
         }
@@ -54,7 +54,7 @@ public class Hyperbol : MonoBehaviour
     [BoxGroup(VISUALS_TITLE)] [GradientHDR]
     public Gradient colorOverVelocity;
     [BoxGroup(VISUALS_TITLE)]
-    public Light light;
+    public new Light light;
 
     [BoxGroup(VISUALS_TITLE)]
     public GameObject wallBounce;
@@ -66,6 +66,12 @@ public class Hyperbol : MonoBehaviour
     [BoxGroup(VISUALS_TITLE)]
     public GameObject trailObject;
     private TrailRenderer trail;
+
+    [BoxGroup(VISUALS_TITLE)]
+    public Transform modelTransform;
+
+    [BoxGroup(VISUALS_TITLE)]
+    public float maxLength = 2.5f;
 
     private float VelocityPortionOfMax
     {
@@ -363,5 +369,21 @@ public class Hyperbol : MonoBehaviour
         Color gradientColor = colorOverVelocity.Evaluate(VelocityPortionOfMax);
         MeshRenderer.sharedMaterial.SetColor(EMISSIVE_COLOR_NAME, gradientColor);
         light.color = gradientColor;
+
+        // Update rotation.
+        if (currentSpinTarget == null)
+        {
+            modelTransform.localRotation = Quaternion.LookRotation(currentDirection);
+        }
+        else
+        {
+            Vector3 direction = Quaternion.Euler(0, Mathf.Rad2Deg * -currentSpinAngle, 0) * Vector3.forward;
+            modelTransform.localRotation = Quaternion.LookRotation(direction);
+        }
+
+        // Update scale.
+        float ballLength = maxLength * VelocityPortionOfMax;
+        ballLength = Mathf.Clamp(ballLength, 1, maxLength);
+        modelTransform.localScale = new Vector3(1, 1, ballLength);
 	}
 }

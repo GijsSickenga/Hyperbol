@@ -28,32 +28,52 @@ public class PlayerManager : MonoBehaviour
         {
             currentStates[i] = GamePad.GetState((PlayerIndex)i);
 
-            //Handle "Start" button input
-            if (previousStates[i].Buttons.Start == ButtonState.Pressed && currentStates[i].Buttons.Start == ButtonState.Released)
+            bool joinGamePad = (previousStates[i].Buttons.Start == ButtonState.Pressed && currentStates[i].Buttons.Start == ButtonState.Released);
+            bool leaveGamePad = (previousStates[i].Buttons.B == ButtonState.Pressed && currentStates[i].Buttons.B == ButtonState.Released);
+            bool changeTeamGamePad = (previousStates[i].Buttons.Y == ButtonState.Pressed && currentStates[i].Buttons.Y == ButtonState.Released);
+            int playerId = i;
+
+            bool joinKeyboard = false;
+            bool leaveKeyboard = false;
+            bool changeTeamKeyboard = false;
+
+#if UNITY_EDITOR
+            joinKeyboard = Input.GetKeyDown(KeyCode.Space);
+            leaveKeyboard = Input.GetKeyDown(KeyCode.Escape);
+            changeTeamKeyboard = Input.GetKeyDown(KeyCode.T);
+
+            if (joinKeyboard || leaveKeyboard || changeTeamKeyboard)
             {
-                if (!playerBlocks[i].activeSelf)
+                playerId = 0;
+            }
+#endif
+
+            // Handle "Start" button input.
+            if (joinGamePad || joinKeyboard)
+            {
+                if (!playerBlocks[playerId].activeSelf)
                 {
-                    playerBlocks[i].SetActive(true);
-                    playerBlocks[i].GetComponent<PlayerBlock>().ChangeTeam(Teams.Red);
+                    playerBlocks[playerId].SetActive(true);
+                    playerBlocks[playerId].GetComponent<PlayerBlock>().ChangeTeam(Teams.Red);
                 }
             }
 
-            //Handle "B" button input
-            if (previousStates[i].Buttons.B == ButtonState.Pressed && currentStates[i].Buttons.B == ButtonState.Released)
+            // Handle "B" button input.
+            if (leaveGamePad || leaveKeyboard)
             {
-                if (playerBlocks[i].activeSelf)
+                if (playerBlocks[playerId].activeSelf)
                 {
-                    playerBlocks[i].GetComponent<PlayerBlock>().ChangeTeam(Teams.NotJoined);
-                    playerBlocks[i].SetActive(false);
+                    playerBlocks[playerId].GetComponent<PlayerBlock>().ChangeTeam(Teams.NotJoined);
+                    playerBlocks[playerId].SetActive(false);
                 }
             }
 
-            //Handle "Y" button input
-            if (previousStates[i].Buttons.Y == ButtonState.Pressed && currentStates[i].Buttons.Y == ButtonState.Released)
+            // Handle "Y" button input.
+            if (changeTeamGamePad || changeTeamKeyboard)
             {
-                if (playerBlocks[i].activeSelf)
+                if (playerBlocks[playerId].activeSelf)
                 {
-                    ChangeTeam(playerBlocks[i]);
+                    ChangeTeam(playerBlocks[playerId]);
                 }
             }
 

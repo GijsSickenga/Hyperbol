@@ -422,20 +422,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _drivingVelocity: 0
   _brakingVelocity: 0
-  _drivingSlowdownTime: 1.8
+  _drivingSlowdownTime: 1.33
   _rotationalVelocity: 0
-  _turningSlowdownTime: 0.7
-  _maxDrivingVelocity: 18
-  _maxReverseVelocity: 5
-  _drivingAcceleration: 25
-  _brakingAcceleration: 5
-  _drivingFriction: 10
-  _maxRotationalVelocity: 140
-  _rotationalAcceleration: 550
-  _turningFriction: 200
+  _turningSlowdownTime: 0.2
+  _maxDrivingVelocity: 20
+  _maxReverseVelocity: 8
+  _drivingAcceleration: 40
+  _brakingAcceleration: 8
+  _drivingFriction: 15
+  _maxRotationalVelocity: 200
+  _rotationalAcceleration: 850
+  _turningFriction: 1000
   _maxRoll: 45
-  _drivingSwayRange: {x: 0.15, y: 0.85}
-  _turnSwayRange: {x: 0, y: 0.95}
+  _drivingSwayRange: {x: 0.15, y: 0.95}
+  _turnSwayRange: {x: 0.05, y: 1}
 --- !u!114 &114892099345276710
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -447,6 +447,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f86b9b45f8e66b04a9bee82e3ba4e496, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  leftButton: 276
+  rightButton: 275
+  speedUpButton: 273
+  reverseButton: 274
+  dischargeButton: 306
+  blinkButton: 304
+  launchBallButton: 32
 --- !u!114 &114994104211531254
 MonoBehaviour:
   m_ObjectHideFlags: 1

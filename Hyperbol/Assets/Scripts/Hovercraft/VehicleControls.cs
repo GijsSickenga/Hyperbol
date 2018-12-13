@@ -37,10 +37,17 @@ public class VehicleControls : MonoBehaviour
     private GamePadState _previousGamePadState;
     private GamePadState _currentGamePadState;
 
+    // Control variables.
     private bool _leftHeld, _rightHeld,
-                 _speedUpHeld, _slowDownHeld,
+                 _speedUpHeld, _reverseHeld,
                  _dischargePressed, _blinkPressed,
                  _launchBallPressed;
+
+    // Debug keyboard buttons.
+    public KeyCode leftButton, rightButton,
+                   speedUpButton, reverseButton,
+                   dischargeButton, blinkButton,
+                   launchBallButton;
 
     public void Initialize(int id, Teams team)
     {
@@ -50,6 +57,10 @@ public class VehicleControls : MonoBehaviour
 
     private void Update()
     {
+#if UNITY_EDITOR
+        // Debug.
+        UpdateInputEditor();
+#else
         // Check if gamepad is assigned.
         if (_playerId != -1)
         {
@@ -59,7 +70,8 @@ public class VehicleControls : MonoBehaviour
         {
             return;
         }
-        
+#endif
+
         // Steering.
         if (_rightHeld && !_leftHeld)
         {
@@ -71,11 +83,11 @@ public class VehicleControls : MonoBehaviour
         }
 
         // Driving.
-        if (_speedUpHeld && !_slowDownHeld)
+        if (_speedUpHeld && !_reverseHeld)
         {
             VehicleStats.VehiclePhysics.SpeedUp();
         }
-        if (_slowDownHeld)
+        if (_reverseHeld)
         {
             VehicleStats.VehiclePhysics.SlowDown();
         }
@@ -107,11 +119,40 @@ public class VehicleControls : MonoBehaviour
 
         // Driving.
         _speedUpHeld = _currentGamePadState.Triggers.Right >= TRIGGER_TRESHOLD;
-        _slowDownHeld = _currentGamePadState.Triggers.Left >= TRIGGER_TRESHOLD;
+        _reverseHeld = _currentGamePadState.Triggers.Left >= TRIGGER_TRESHOLD;
 
         // Abilities.
         _dischargePressed = _currentGamePadState.Buttons.X == ButtonState.Pressed && _previousGamePadState.Buttons.X == ButtonState.Released;
         _blinkPressed = _currentGamePadState.Buttons.B == ButtonState.Pressed && _previousGamePadState.Buttons.B == ButtonState.Released;
         _launchBallPressed = _currentGamePadState.Buttons.A == ButtonState.Pressed && _previousGamePadState.Buttons.A == ButtonState.Released;
     }
+
+#if UNITY_EDITOR
+    /// <summary>
+    /// Debug function that gets both controller and keyboard input.
+    /// Keyboard input affects all players.
+    /// </summary>
+    private void UpdateInputEditor()
+    {
+        // Gamepad input.
+        if (_playerId != -1)
+        {
+            UpdateInput();
+        }
+
+        // Debug keyboard input.
+        // Steering.
+        _leftHeld = Input.GetKey(leftButton);
+        _rightHeld = Input.GetKey(rightButton);
+
+        // Driving.
+        _speedUpHeld = Input.GetKey(speedUpButton);
+        _reverseHeld = Input.GetKey(reverseButton);
+
+        // Abilities.
+        _dischargePressed = Input.GetKeyDown(dischargeButton);
+        _blinkPressed = Input.GetKeyDown(blinkButton);
+        _launchBallPressed = Input.GetKeyDown(launchBallButton);
+    }
+#endif
 }
