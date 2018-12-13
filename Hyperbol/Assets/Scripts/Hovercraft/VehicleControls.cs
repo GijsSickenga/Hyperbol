@@ -139,20 +139,22 @@ public class VehicleControls : MonoBehaviour
         {
             UpdateInput();
         }
+        else
+        {
+            // Debug keyboard input.
+            // Steering.
+            _leftHeld = Input.GetKey(leftButton);
+            _rightHeld = Input.GetKey(rightButton);
 
-        // Debug keyboard input.
-        // Steering.
-        _leftHeld = Input.GetKey(leftButton);
-        _rightHeld = Input.GetKey(rightButton);
+            // Driving.
+            _speedUpHeld = Input.GetKey(speedUpButton);
+            _reverseHeld = Input.GetKey(reverseButton);
 
-        // Driving.
-        _speedUpHeld = Input.GetKey(speedUpButton);
-        _reverseHeld = Input.GetKey(reverseButton);
-
-        // Abilities.
-        _dischargePressed = Input.GetKeyDown(dischargeButton);
-        _blinkPressed = Input.GetKeyDown(blinkButton);
-        _launchBallPressed = Input.GetKeyDown(launchBallButton);
+            // Abilities.
+            _dischargePressed = Input.GetKeyDown(dischargeButton);
+            _blinkPressed = Input.GetKeyDown(blinkButton);
+            _launchBallPressed = Input.GetKeyDown(launchBallButton);
+        }
     }
 #endif
 }
