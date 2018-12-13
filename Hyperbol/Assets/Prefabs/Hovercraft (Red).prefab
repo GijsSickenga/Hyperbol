@@ -413,15 +413,15 @@ MonoBehaviour:
   _brakingVelocity: 0
   _drivingSlowdownTime: 1.8
   _rotationalVelocity: 0
-  _turningSlowdownTime: 0.7
+  _turningSlowdownTime: 0.57
   _maxDrivingVelocity: 18
   _maxReverseVelocity: 5
-  _drivingAcceleration: 25
+  _drivingAcceleration: 35
   _brakingAcceleration: 5
   _drivingFriction: 10
-  _maxRotationalVelocity: 140
-  _rotationalAcceleration: 550
-  _turningFriction: 200
+  _maxRotationalVelocity: 200
+  _rotationalAcceleration: 750
+  _turningFriction: 350
   _maxRoll: 45
   _drivingSwayRange: {x: 0.15, y: 0.85}
   _turnSwayRange: {x: 0, y: 0.95}
